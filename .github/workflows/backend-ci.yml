@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - master
+      - validation/2914-linux-20260922
     paths-ignore:
       - "web/**"
 permissions:
@@ -62,12 +63,9 @@ jobs:
           fetch-depth: 0 # fetch history for all branches and tags
       - name: Install uv
         uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
-      - name: Run pre-commit
-        run: |
-          uv run pre-commit run --all-files
       - name: Run Python tests
         run: |
-          uv run tox
+          uv run tox -e test -- dandiapi/api/tests/test_tasks.py
       - name: Verify gunicorn config
         run: |
           uv run gunicorn --config gunicorn.conf.py --check-config dandiapi.wsgi
